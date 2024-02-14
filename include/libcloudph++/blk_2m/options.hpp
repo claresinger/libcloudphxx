@@ -22,7 +22,8 @@ namespace libcloudphxx
         cond = true, // condensation
         acnv = true, // autoconversion
         accr = true, // accretion
-        sedi = true; // sedimentation
+        sedi = true, // sedimentation
+        cld_sedi = false; // cloud water sedimentation
 
       // RH limit for activation
       real_t RH_max = 44; 

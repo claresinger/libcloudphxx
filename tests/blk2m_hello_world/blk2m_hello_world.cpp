@@ -46,11 +46,13 @@ int main()
   ptr_t
     rho_d,
     rr, nr, 
-    dot_rr, dot_nr
+    dot_rr, dot_nr,
+    rc, nc,
+    dot_rc, dot_nc
   ;
   
   // memory allocation
-  for (auto arr : std::set<ptr_t*>({ &rho_d, &rr, &nr, &dot_rr, &dot_nr }))
+  for (auto arr : std::set<ptr_t*>({ &rho_d, &rr, &nr, &rc, &nc, &dot_rr, &dot_nr, &dot_rc, &dot_nc }))
     arr->reset(new real_t[ (nx+2*n_halo) * (nz+2*n_halo) ]);
 
   // instantiating the options container
@@ -62,13 +64,19 @@ int main()
     bz_rr     = bz(rr),
     bz_nr     = bz(nr),
     bz_dot_rr = bz(dot_rr),
-    bz_dot_nr = bz(dot_nr)
+    bz_dot_nr = bz(dot_nr),
+    bz_r      = bz(rc),
+    bz_nc     = bz(nc),
+    bz_dot_rc = bz(dot_rc),
+    bz_dot_nc = bz(dot_nc)
   ;
 
   // some meaningfull values
   bz_rho_d(i_all, j_all) = 1;
   bz_rr(i_all, nz-1) = 1e-5;  
-  bz_nr(i_all, nz-1) = 1e3;  
+  bz_nr(i_all, nz-1) = 1e3;
+  bz_rc(i_all, nz-1) = 1e-8;
+  bz_nc(i_all, nz-1) = 1e3;  
 
   std::cerr << bz_rr << std::endl;
 
@@ -78,14 +86,20 @@ int main()
     // columns of dotted fields to be modified
     auto 
       bz_dot_rr_ij = bz_dot_rr(i, j_all),
-      bz_dot_nr_ij = bz_dot_nr(i, j_all);
+      bz_dot_nr_ij = bz_dot_nr(i, j_all),
+      bz_dot_rc_ij = bz_dot_rc(i, j_all),
+      bz_dot_nc_ij = bz_dot_nc(i, j_all);
     b2m::rhs_columnwise(
       opts,
       bz_dot_rr_ij,
       bz_dot_nr_ij,
+      bz_dot_rc_ij,
+      bz_dot_nc_ij,
       bz_rho_d  (i, j_all),
       bz_rr     (i, j_all),
       bz_nr     (i, j_all),
+      bz_rc     (i, j_all),
+      bz_nc     (i, j_all),
       dt,
       dz
     );

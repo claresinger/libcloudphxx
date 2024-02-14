@@ -243,6 +243,53 @@ namespace libcloudphxx
         assert(finite(tmp * si::seconds / si::metres) && "v_term_n terminal velocity is finite failed");
         return tmp;
       }
+
+      template <typename real_t>
+      inline quantity<si::velocity, real_t> v_term_cld_m(
+        const quantity<si::mass_density, real_t> &rhod,
+        const quantity<si::dimensionless, real_t> &rc,
+        const quantity<divide_typeof_helper<si::dimensionless, si::mass>::type, real_t> &nc
+      ) {
+        if (rc < rc_eps<real_t>() || nc < nc_eps<real_t>() / si::kilograms)
+          return 0 * si::metres_per_second;
+
+        quantity<divide_typeof_helper<si::dimensionless, si::length>::type, real_t> lbd = lambda_c(nc, rc, rhod);
+        quantity<si::dimensionless, real_t> mu = miu_c(nc);
+
+        // eq. A4 in Morrison 2005
+        auto tmp = real_t(3e7) * rho_stp<real_t>() / rhod * std::pow(real_t(lbd * si::metres), real_t(-2))
+          * (
+            std::tgamma(real_t(6) + mu) / std::tgamma(real_t(4) + mu)
+          ) * si::metres/si::seconds;  // velocity in metres/seconds
+
+        assert(tmp * si::seconds / si::metres >= 0 && "negative terminal velocity!");
+        assert(finite(tmp * si::seconds / si::metres) && "v_term_m terminal velocity is finite failed");
+        return tmp;
+      }
+
+      template <typename real_t>
+      inline quantity<si::velocity, real_t> v_term_cld_n(
+        const quantity<si::mass_density, real_t> &rhod,
+        const quantity<si::dimensionless, real_t> &rc,
+        const quantity<divide_typeof_helper<si::dimensionless, si::mass>::type, real_t> &nc
+      ) {
+        if (rc < rc_eps<real_t>() || nc < nc_eps<real_t>() / si::kilograms)
+          return 0 * si::metres_per_second;
+
+        quantity<divide_typeof_helper<si::dimensionless, si::length>::type, real_t> lbd = lambda_c(nc, rc, rhod);
+        quantity<si::dimensionless, real_t> mu = miu_c(nc);
+
+        // eq. A4 in Morrison 2005
+        auto tmp = real_t(3e7) * rho_stp<real_t>() / rhod * std::pow(real_t(lbd * si::metres), real_t(-2))
+          * (
+            std::tgamma(real_t(3) + mu) / std::tgamma(real_t(1) + mu)
+          ) * si::metres/si::seconds;  // velocity in metres/seconds
+
+        assert(tmp * si::seconds / si::metres >= 0 && "negative terminal velocity!");
+        assert(finite(tmp * si::seconds / si::metres) && "v_term_m terminal velocity is finite failed");
+        return tmp;
+      }
+
     };
   };
 };

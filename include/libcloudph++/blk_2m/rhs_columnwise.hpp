@@ -133,12 +133,12 @@ namespace libcloudphxx
           {
             // terminal velocities at grid-cell edge (to assure precip mass conservation)
             quantity<multiply_typeof_helper<si::velocity, si::mass_density>::type, real_t> tmp_mom_m  = -real_t(.5) * ( // averaging + axis orientation
-              (*rhod_below * si::kilograms / si::cubic_metres) * formulae::v_term_m(
+              (*rhod_below * si::kilograms / si::cubic_metres) * formulae::v_term_cld_m(
                 *rhod_below * si::kilograms / si::cubic_metres,
                 *rc_below * si::kilograms / si::kilograms,
                 *nc_below / si::kilograms
               ) +
-              (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_m(
+              (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_cld_m(
                 *rhod * si::kilograms / si::cubic_metres,
                 *rc * si::kilograms / si::kilograms,
                 *nc / si::kilograms
@@ -146,12 +146,12 @@ namespace libcloudphxx
             );
 
             quantity<multiply_typeof_helper<si::velocity, si::mass_density>::type, real_t> tmp_mom_n  = -real_t(.5) * ( // averaging + axis orientation
-              (*rhod_below * si::kilograms / si::cubic_metres) * formulae::v_term_n(
+              (*rhod_below * si::kilograms / si::cubic_metres) * formulae::v_term_cld_n(
                 *rhod_below * si::kilograms / si::cubic_metres,
                 *rc_below * si::kilograms / si::kilograms,
                 *nc_below / si::kilograms
               ) +
-              (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_n(
+              (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_cld_n(
                 *rhod * si::kilograms / si::cubic_metres,
                 *rc * si::kilograms / si::kilograms,
                 *nc / si::kilograms
@@ -200,13 +200,13 @@ namespace libcloudphxx
       if (opts.cld_sedi)
       {
         quantity<multiply_typeof_helper<si::velocity, si::mass_density>::type, real_t>
-          tmp_mom_m = - (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_m(
+          tmp_mom_m = - (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_cld_m(
             *rhod * si::kilograms / si::cubic_metres,
             *rc * si::kilograms / si::kilograms,
             *nc / si::kilograms
           );
         quantity<multiply_typeof_helper<si::velocity, si::mass_density>::type, real_t>
-          tmp_mom_n = - (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_n(
+          tmp_mom_n = - (*rhod * si::kilograms / si::cubic_metres) * formulae::v_term_cld_n(
             *rhod * si::kilograms / si::cubic_metres,
             *rc * si::kilograms / si::kilograms,
             *nc / si::kilograms
